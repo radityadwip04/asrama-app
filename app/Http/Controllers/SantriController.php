@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 
 class SantriController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role:admin')->only(['edit', 'update', 'destroy']);
+    }
+
     public function index()
     {
         $santris = Santri::with('kamar')->get();
@@ -28,7 +33,7 @@ class SantriController extends Controller
             'kamar_id' => 'required|exists:kamars,id',
             'nis' => 'required|max:30|unique:santris,nis',
             'nama' => 'required|max:100',
-            'jenis_kelamin' => 'required|max:20',
+            'jenis_kelamin' => 'required|in:L,P',
             'tanggal_lahir' => 'required|date',
             'alamat' => 'required',
             'no_hp' => 'required|max:20',
@@ -54,7 +59,7 @@ class SantriController extends Controller
             'kamar_id' => 'required|exists:kamars,id',
             'nis' => 'required|max:30|unique:santris,nis,' . $santri->id,
             'nama' => 'required|max:100',
-            'jenis_kelamin' => 'required|max:20',
+            'jenis_kelamin' => 'required|in:L,P',
             'tanggal_lahir' => 'required|date',
             'alamat' => 'required',
             'no_hp' => 'required|max:20',

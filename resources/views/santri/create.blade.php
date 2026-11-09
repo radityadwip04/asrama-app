@@ -42,10 +42,10 @@ textarea{height:90px}
 @error('nama')<div class="error">{{ $message }}</div>@enderror
 
 <label>Jenis Kelamin</label>
-<select name="jenis_kelamin">
+<select name="jenis_kelamin" required>
 <option value="">-- Pilih --</option>
-<option value="Laki-laki">Laki-laki</option>
-<option value="Perempuan">Perempuan</option>
+<option value="L" {{ old('jenis_kelamin') == 'L' ? 'selected' : '' }}>Laki-laki</option>
+<option value="P" {{ old('jenis_kelamin') == 'P' ? 'selected' : '' }}>Perempuan</option>
 </select>
 
 <label>Tanggal Lahir</label>

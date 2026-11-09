@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 
 class PembayaranController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role:admin')->only(['edit', 'update', 'destroy']);
+    }
+
     public function index()
     {
         $pembayarans = Pembayaran::with('santri')->get();

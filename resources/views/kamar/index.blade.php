@@ -100,7 +100,9 @@
                 <th>Lantai</th>
                 <th>Kapasitas</th>
                 <th>Status</th>
-                <th>Aksi</th>
+                @if(auth()->user()->role === 'admin')
+                    <th>Aksi</th>
+                @endif
             </tr>
         </thead>
 
@@ -114,7 +116,8 @@
                     <td>{{ $kamar->kapasitas }} orang</td>
                     <td>{{ $kamar->status }}</td>
 
-                    <td>
+                    @if(auth()->user()->role === 'admin')
+<td>
                         <a href="{{ route('kamars.edit', $kamar) }}"
                            class="btn btn-edit">
                             Edit
@@ -131,10 +134,11 @@
                             </button>
                         </form>
                     </td>
+@endif
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7">Belum ada data kamar.</td>
+                    <td colspan="{{ auth()->user()->role === 'admin' ? 7 : 6 }}">Belum ada data kamar.</td>
                 </tr>
             @endforelse
         </tbody>

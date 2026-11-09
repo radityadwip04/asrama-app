@@ -39,7 +39,9 @@
     <th>Kamar</th>
     <th>No HP</th>
     <th>Status</th>
-    <th>Aksi</th>
+    @if(auth()->user()->role === 'admin')
+                    <th>Aksi</th>
+                @endif
 </tr>
 </thead>
 
@@ -53,7 +55,8 @@
     <td>{{ $santri->kamar->nomor_kamar ?? '-' }}</td>
     <td>{{ $santri->no_hp }}</td>
     <td>{{ $santri->status }}</td>
-    <td>
+    @if(auth()->user()->role === 'admin')
+<td>
         <a href="{{ route('santris.edit',$santri) }}" class="btn edit">Edit</a>
 
         <form action="{{ route('santris.destroy',$santri) }}" method="POST"
@@ -63,10 +66,11 @@
             <button class="btn delete">Hapus</button>
         </form>
     </td>
+@endif
 </tr>
 @empty
 <tr>
-    <td colspan="8">Belum ada data santri.</td>
+    <td colspan="{{ auth()->user()->role === 'admin' ? 8 : 7 }}">Belum ada data santri.</td>
 </tr>
 @endforelse
 </tbody>

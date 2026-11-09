@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 
 class AbsensiController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role:admin')->only(['edit', 'update', 'destroy']);
+    }
+
     public function index()
     {
         $absensis = Absensi::with('santri')->get();

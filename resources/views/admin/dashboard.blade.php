@@ -1,0 +1,1 @@
+@include('dashboard', ['dashboardRole' => 'admin'])

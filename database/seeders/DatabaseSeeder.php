@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             SantriSeeder::class,
             PembayaranSeeder::class,
             AbsensiSeeder::class,
+            UserSeeder::class,
         ]);
     }
 }

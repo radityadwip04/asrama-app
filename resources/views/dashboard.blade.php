@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Asrama Management</title>
+    <title>{{ $dashboardRole === 'admin' ? 'Admin Dashboard' : 'User Dashboard' }} | AsramaApp</title>
 
     <style>
 
@@ -95,6 +95,41 @@
 
         .header p {
             color: #6b7280;
+        }
+
+        .account-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .role-pill {
+            display: inline-block;
+            background: #dbeafe;
+            color: #1d4ed8;
+            padding: 7px 11px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .logout-button {
+            border: 0;
+            border-radius: 9px;
+            padding: 11px 14px;
+            background: #dc2626;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .flash-message {
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            background: #dcfce7;
+            color: #166534;
         }
 
         .date {
@@ -239,6 +274,31 @@
             margin-bottom: 10px;
         }
 
+        .welcome.user-welcome {
+            background: linear-gradient(135deg, #064e3b, #0f766e);
+        }
+
+        .dashboard-label {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 6px 11px;
+            border-radius: 20px;
+            background: rgba(255,255,255,.16);
+            color: #fff;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .menu-note {
+            margin: 18px 12px 0;
+            padding: 12px;
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 10px;
+            color: #cbd5e1;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
         .welcome p {
             color: #d1d5db;
             line-height: 1.7;
@@ -315,32 +375,26 @@
     </div>
 
     <div class="menu-title">
-        Menu Utama
+        {{ $dashboardRole === 'admin' ? 'Panel Administrator' : 'Menu Pengguna' }}
     </div>
 
-    <a href="#dashboard" class="menu">
-        📊 Dashboard
+    <a href="{{ $dashboardRole === 'admin' ? route('admin.dashboard') : route('user.dashboard') }}" class="menu">
+        📊 Dashboard {{ $dashboardRole === 'admin' ? 'Admin' : 'User' }}
     </a>
 
-    <a href="#asrama" class="menu">
-        🏢 Data Asrama
-    </a>
+    <a href="{{ route('asramas.index') }}" class="menu">🏢 Data Asrama</a>
+    <a href="{{ route('kamars.index') }}" class="menu">🚪 Data Kamar</a>
+    <a href="{{ route('santris.index') }}" class="menu">👨‍🎓 Data Santri</a>
+    <a href="{{ route('pembayarans.index') }}" class="menu">💰 Pembayaran</a>
+    <a href="{{ route('absensis.index') }}" class="menu">📋 Absensi</a>
 
-    <a href="#kamar" class="menu">
-        🚪 Data Kamar
-    </a>
-
-    <a href="#santri" class="menu">
-        👨‍🎓 Data Santri
-    </a>
-
-    <a href="#pembayaran" class="menu">
-        💰 Pembayaran
-    </a>
-
-    <a href="#absensi" class="menu">
-        📋 Absensi
-    </a>
+    <div class="menu-note">
+        @if($dashboardRole === 'admin')
+            Anda memiliki akses penuh untuk mengelola seluruh data asrama.
+        @else
+            Anda dapat melihat dan menambahkan data. Pengubahan dan penghapusan hanya dapat dilakukan Admin.
+        @endif
+    </div>
 
 </aside>
 
@@ -357,35 +411,54 @@
         <div>
 
             <h1>
-                Dashboard Asrama
+                {{ $dashboardRole === 'admin' ? 'Dashboard Administrator' : 'Dashboard User' }}
             </h1>
 
             <p>
-                Sistem Manajemen Asrama / Pondok
+                {{ $dashboardRole === 'admin' ? 'Pusat kendali Sistem Manajemen Asrama' : 'Halaman informasi dan pengelolaan data asrama' }}
             </p>
 
         </div>
 
-        <div class="date">
-            📅 {{ date('d F Y') }}
+        <div class="account-bar">
+            <div class="date">
+                📅 {{ date('d F Y') }}
+            </div>
+            <div class="date">
+                {{ auth()->user()->name }} · {{ ucfirst(auth()->user()->role) }}
+            </div>
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="logout-button">Logout</button>
+            </form>
         </div>
 
     </div>
 
 
+    @if(session('success'))
+        <div class="flash-message">{{ session('success') }}</div>
+    @endif
+
+    @if(session('error'))
+        <div class="flash-message" style="background:#fee2e2;color:#991b1b">{{ session('error') }}</div>
+    @endif
+
     <!-- WELCOME -->
 
-    <div class="welcome">
+    <div class="welcome {{ $dashboardRole === 'user' ? 'user-welcome' : '' }}">
 
         <h2>
-            Selamat Datang 👋
+            {{ $dashboardRole === 'admin' ? 'Selamat Datang, Administrator' : 'Selamat Datang, ' . auth()->user()->name }} 👋
         </h2>
 
-        <p>
-            Sistem ini digunakan untuk mengelola data asrama,
-            kamar, santri, pembayaran, dan absensi secara
-            terintegrasi.
-        </p>
+        @if($dashboardRole === 'admin')
+            <p>Anda masuk sebagai Administrator. Kelola data asrama, kamar, santri, pembayaran, dan absensi melalui panel ini. Anda memiliki hak akses CRUD penuh.</p>
+            <span class="dashboard-label">ADMINISTRATOR · AKSES PENUH</span>
+        @else
+            <p>Ini adalah ruang kerja pengguna. Anda dapat melihat seluruh informasi dan menambahkan data baru. Fitur edit serta hapus data hanya tersedia untuk Administrator.</p>
+            <span class="dashboard-label">USER · AKSES TERBATAS</span>
+        @endif
 
     </div>
 

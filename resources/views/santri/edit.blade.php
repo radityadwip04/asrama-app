@@ -38,9 +38,9 @@ textarea{height:90px}
 <input type="text" name="nama" value="{{ old('nama',$santri->nama) }}">
 
 <label>Jenis Kelamin</label>
-<select name="jenis_kelamin">
-<option value="Laki-laki" {{ $santri->jenis_kelamin=='Laki-laki'?'selected':'' }}>Laki-laki</option>
-<option value="Perempuan" {{ $santri->jenis_kelamin=='Perempuan'?'selected':'' }}>Perempuan</option>
+<select name="jenis_kelamin" required>
+<option value="L" {{ old('jenis_kelamin', $santri->jenis_kelamin) == 'L' ? 'selected' : '' }}>Laki-laki</option>
+<option value="P" {{ old('jenis_kelamin', $santri->jenis_kelamin) == 'P' ? 'selected' : '' }}>Perempuan</option>
 </select>
 
 <label>Tanggal Lahir</label>

@@ -39,7 +39,9 @@ form{display:inline}
 <th>Jumlah</th>
 <th>Status</th>
 <th>Keterangan</th>
-<th>Aksi</th>
+@if(auth()->user()->role === 'admin')
+                    <th>Aksi</th>
+                @endif
 </tr>
 </thead>
 
@@ -53,6 +55,7 @@ form{display:inline}
 <td>Rp {{ number_format($p->jumlah,0,',','.') }}</td>
 <td>{{ $p->status }}</td>
 <td>{{ $p->keterangan ?? '-' }}</td>
+@if(auth()->user()->role === 'admin')
 <td>
 <a href="{{ route('pembayarans.edit',$p) }}" class="btn edit">Edit</a>
 
@@ -63,9 +66,10 @@ onsubmit="return confirm('Yakin ingin menghapus pembayaran ini?')">
 <button class="btn delete">Hapus</button>
 </form>
 </td>
+@endif
 </tr>
 @empty
-<tr><td colspan="8">Belum ada pembayaran.</td></tr>
+<tr><td colspan="{{ auth()->user()->role === 'admin' ? 8 : 7 }}">Belum ada pembayaran.</td></tr>
 @endforelse
 </tbody>
 </table>

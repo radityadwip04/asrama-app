@@ -37,7 +37,9 @@ form{display:inline}
 <th>Tanggal</th>
 <th>Status</th>
 <th>Keterangan</th>
-<th>Aksi</th>
+@if(auth()->user()->role === 'admin')
+                    <th>Aksi</th>
+                @endif
 </tr>
 </thead>
 
@@ -49,6 +51,7 @@ form{display:inline}
 <td>{{ $absensi->tanggal }}</td>
 <td>{{ $absensi->status }}</td>
 <td>{{ $absensi->keterangan ?? '-' }}</td>
+@if(auth()->user()->role === 'admin')
 <td>
 
 <a href="{{ route('absensis.edit',$absensi) }}" class="btn edit">
@@ -63,10 +66,11 @@ onsubmit="return confirm('Yakin ingin menghapus absensi ini?')">
 </form>
 
 </td>
+@endif
 </tr>
 @empty
 <tr>
-<td colspan="6">Belum ada data absensi.</td>
+<td colspan="{{ auth()->user()->role === 'admin' ? 6 : 5 }}">Belum ada data absensi.</td>
 </tr>
 @endforelse
 </tbody>

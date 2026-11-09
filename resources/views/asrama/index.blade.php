@@ -149,7 +149,9 @@
                     <th>Gedung</th>
                     <th>Alamat</th>
                     <th>Jumlah Kamar</th>
+                    @if(auth()->user()->role === 'admin')
                     <th>Aksi</th>
+                @endif
                 </tr>
             </thead>
 
@@ -171,7 +173,8 @@
 
                         <td>{{ $asrama->kamars->count() }} kamar</td>
 
-                        <td>
+                        @if(auth()->user()->role === 'admin')
+<td>
                             <div class="actions">
 
                                 <a
@@ -198,13 +201,14 @@
 
                             </div>
                         </td>
+@endif
 
                     </tr>
 
                 @empty
 
                     <tr>
-                        <td colspan="6" style="text-align:center;">
+                        <td colspan="{{ auth()->user()->role === 'admin' ? 6 : 5 }}" style="text-align:center;">
                             Belum ada data asrama.
                         </td>
                     </tr>

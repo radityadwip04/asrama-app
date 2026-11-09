@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 
 class KamarController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role:admin')->only(['edit', 'update', 'destroy']);
+    }
+
     public function index()
     {
         $kamars = Kamar::with('asrama')->get();

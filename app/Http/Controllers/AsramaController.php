@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class AsramaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role:admin')->only(['edit', 'update', 'destroy']);
+    }
+
     public function index()
     {
         $asramas = Asrama::with('kamars')->get();
